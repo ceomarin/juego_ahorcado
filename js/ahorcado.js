@@ -5,11 +5,11 @@ const letra4 = document.getElementById("letra4");
 const letra5 = document.getElementById("letra5");
 const letra6 = document.getElementById("letra6");
 const letra7 = document.getElementById("letra7");
-const casillaLetra = document.getElementById("letra");
+const casillaLetraIngresada = document.getElementById("letra");
 const casillaIntento = document.getElementById("intento");
-// const = document.getElementById();
-// const = document.getElementById();
-// const = document.getElementById();
+const mensajeAlJugador = document.getElementById("mensajeAlJugador");
+const fotoAhorcado = document.getElementById("fotoAhorcado");
+const cajaIngreso = document.getElementById("cajaIngreso");
 // const = document.getElementById();
 // const = document.getElementById();
 // const = document.getElementById();
@@ -21,15 +21,21 @@ var listaPalabras= ["conocer","proceso","hermosa","mejorar","aspecto","momento",
 "plasmar","muestra","delgado","definir","exponer","obtener"];
 
 var letra ="";
-
 const letrasUsadas = [];
-
 var palabraElegida = "";
-
+var cantIntentos = 10;
 
 // eventos
 //btnJugar.addEventListener("click",ingresarLetra);
 
+function mensaje(mensajeTexto){
+    mensajeAlJugador.innerHTML = mensajeTexto;
+}
+
+function cambiarImagen(imgURL){
+    //var imgURL = "./img/quedan"+cantIntentos+".png";
+    fotoAhorcado.src = imgURL;
+}
 
 function letraEnPantalla(index){
     var letraCorrecta;
@@ -63,35 +69,61 @@ function letraEnPantalla(index){
     letraCorrecta.innerText=letra.toUpperCase();
 }
 
-function mostrarLetra(){
+function haGanado(){
+    for ( i=0; i<palabraElegida.length; i++ ){
+        if(! letrasUsadas.includes(palabraElegida[i])){
+            return false;
+        }
+    }
+    return true;
+}
+
+function actualizarPantalla(){
     for (i=0; i<palabraElegida.length;i++){
         if(letra == palabraElegida[i]){
-            //reemplazar espacio por la letra acertada
+            //reemplazar '_' por la letra acertada
             letraEnPantalla(i);
         }
     }
-    casillaIntento.innerHTML+='<li class="list-group-item">'+letra+'</li>';
+    //Muestra letras usadas
+    casillaIntento.innerHTML='<li class="list-group-item">'+letrasUsadas+'</li>';
+    cantIntentos--;
+    casillaLetraIngresada.value = "";
+    if (haGanado()){
+        cambiarImagen("./img/ganador.png");
+        mensaje("Ha salvado su cuello esta vez");
+        cajaIngreso.style="display:none";
+    }else{
+        cambiarImagen("./img/quedan"+cantIntentos+".png");
+        if (cantIntentos > 0){
+            mensaje('<p class="m-0 p-0 text-center">Quedan '+cantIntentos+' intentos :)</p>');
+        }else{
+            mensaje("lasciate ogni speranza voi ch'entrate");
+            cajaIngreso.style="display:none";
+        }
+    }
 }
 
 function estaUsada(){
-    for(let i = 0; i < letrasUsadas.length; i++){
-        if (letra === letrasUsadas[i]){
+    if (letra.length == 1){
+        if (letrasUsadas.includes(letra)){
             return true;
+        }else{
+            return false;
         }
     }
-    return false;
+    return true;
 }
 
 // al ingresar letra:
 function ingresarLetra(){
-    letra = casillaLetra.value.toLowerCase(); /****************/
+    letra = casillaLetraIngresada.value.toLowerCase(); /****************/
     if(estaUsada()){
-        alert("Ya ha ingresado ésta letra, porfavor intentelo nuevamente.");
+        alert("Ingrese un carácter válido no repetido");
     }else{
         letrasUsadas.push(letra);
-        mostrarLetra();
+        actualizarPantalla();
     }
-    console.log(letrasUsadas);
 }
 
 //al cargar la página
@@ -101,5 +133,6 @@ function elegirPalabra(){
     console.log(palabraElegida);
 }
 
-// console.log(listaPalabras.length);
 elegirPalabra();
+mensaje('<p class="m-0 p-0 text-center">Quedan '+cantIntentos+' intentos :)</p>');
+cambiarImagen("./img/quedan"+cantIntentos+".png");
