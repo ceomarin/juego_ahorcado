@@ -1,18 +1,18 @@
-var letra1= document.getElementById("letra1");
-var letra2= document.getElementById("letra2");
-var letra3= document.getElementById("letra3");
-var letra4= document.getElementById("letra4");
-var letra5= document.getElementById("letra5");
-var letra6= document.getElementById("letra6");
-var letra7= document.getElementById("letra7");
-var casillaLetra = document.getElementById("letra");
-// var = document.getElementById();
-// var = document.getElementById();
-// var = document.getElementById();
-// var = document.getElementById();
-// var = document.getElementById();
-// var = document.getElementById();
-// var = document.getElementById();
+const letra1 = document.getElementById("letra1");
+const letra2 = document.getElementById("letra2");
+const letra3 = document.getElementById("letra3");
+const letra4 = document.getElementById("letra4");
+const letra5 = document.getElementById("letra5");
+const letra6 = document.getElementById("letra6");
+const letra7 = document.getElementById("letra7");
+const casillaLetra = document.getElementById("letra");
+const casillaIntento = document.getElementById("intento");
+// const = document.getElementById();
+// const = document.getElementById();
+// const = document.getElementById();
+// const = document.getElementById();
+// const = document.getElementById();
+// const = document.getElementById();
 
 var listaPalabras= ["conocer","proceso","hermosa","mejorar","aspecto","momento","mostrar","valores","durante",
 "cumplir","ofrecer","recibir","impacto","calidad","motivar","sistema","atender","aplicar","estudio","control",
@@ -20,11 +20,16 @@ var listaPalabras= ["conocer","proceso","hermosa","mejorar","aspecto","momento",
 "generar","empezar","montaña","inferir","cliente","obligar","señalar","afirmar","asistir","detalle","existir",
 "plasmar","muestra","delgado","definir","exponer","obtener"];
 
-var letraIngresada ="";
+var letra ="";
 
-const letras = [];
+const letrasUsadas = [];
 
 var palabraElegida = "";
+
+
+// eventos
+//btnJugar.addEventListener("click",ingresarLetra);
+
 
 function letraEnPantalla(index){
     var letraCorrecta;
@@ -55,36 +60,46 @@ function letraEnPantalla(index){
             //Crushear la página
     }
     //reemplazar texto de la casilla ID="AdHoc"
-    letraCorrecta.innerText=letraIngresada.toUpperCase();
+    letraCorrecta.innerText=letra.toUpperCase();
 }
 
 function mostrarLetra(){
     for (i=0; i<palabraElegida.length;i++){
-        if(letraIngresada == palabraElegida[i]){
+        if(letra == palabraElegida[i]){
             //reemplazar espacio por la letra acertada
-            letraEnPantalla();
+            letraEnPantalla(i);
         }
     }
+    casillaIntento.innerHTML+='<li class="list-group-item">'+letra+'</li>';
+}
+
+function estaUsada(){
+    for(let i = 0; i < letrasUsadas.length; i++){
+        if (letra === letrasUsadas[i]){
+            return true;
+        }
+    }
+    return false;
 }
 
 // al ingresar letra:
-function ingresarLetra(letra){
+function ingresarLetra(){
     letra = casillaLetra.value.toLowerCase(); /****************/
-    if (letra in letras){
-        alert("Ya ha ingresado ésta letra, porfavor intentelo nuevamente.")
+    if(estaUsada()){
+        alert("Ya ha ingresado ésta letra, porfavor intentelo nuevamente.");
+    }else{
+        letrasUsadas.push(letra);
+        mostrarLetra();
     }
-    else{
-        letras.push(letra)
-        mostrarLetra(letra)
-    }
+    console.log(letrasUsadas);
 }
 
 //al cargar la página
 function elegirPalabra(){
-    //console.table(listaPalabras);
+    // console.table(listaPalabras);
     palabraElegida = listaPalabras[parseInt(Math.random()*listaPalabras.length-2)+1];        
     console.log(palabraElegida);
 }
 
-//console.log(listaPalabras.length);
+// console.log(listaPalabras.length);
 elegirPalabra();
